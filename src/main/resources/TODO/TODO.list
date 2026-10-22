@@ -1,0 +1,11 @@
+    - (ANYONE) MATCH DATA : Save at least 20 matches in DB when fetching account data.
+
+    - (ADMIN) Update Champions : Updates the data on champions in DB
+     Returns a Json of all champions
+     ** Should have a system that checks the champion pool once every 24 hours.
+
+    - (USER) TRACK ACCOUNT : Adds a Riot Account to the User's tracking list
+    Returns a Json with listed scouted accounts listed with AccountPreviewDTOs. This will later on be used for quick access
+
+    - (USER) STOP TRACKING ACCOUNT : Removes selected Riot account from the tracked List
+    If the account exists on the list

@@ -1,0 +1,37 @@
+
+### Register a user (if you haven't created one yet)
+POST http://localhost:7070/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "testpassword"
+}
+
+> {%
+    client.global.set("jwt_token", response.body.token);
+%}
+
+### Login
+POST http://localhost:7070/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "testpassword"
+}
+
+> {%
+    client.global.set("jwt_token", response.body.token);
+%}
+
+### Test public endpoint
+GET http://localhost:7070/auth/test
+
+### Test protected USER endpoint
+GET http://localhost:7070/protected/user_demo
+Authorization: Bearer {{jwt_token}}
+
+### Test protected ADMIN endpoint
+GET http://localhost:7070/protected/admin_demo
+Authorization: Bearer {{jwt_token}}

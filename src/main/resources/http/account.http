@@ -1,0 +1,22 @@
+### Find or Add Account in DB
+POST http://localhost:7070/account/find
+Content-Type: application/json
+
+{
+  "gameName": "CUC",
+  "tagLine": "2808",
+  "region": "eun1"
+}
+
+### Update Account in DB - PreviewDTO
+POST http://localhost:7070/account/update
+Content-Type: application/json
+
+{
+  "puuid":  "QBf454gEybbOmbkG8Q_2G7XKsjYS43xJPfvm5qALijmXxUGmt162DUF_95YEEp2qXp3Ewv484IS4eg",
+  "gameName":  "CUC",
+  "tagLine":  "2808",
+  "region":  "eun1",
+  "profileIconId":  "7113",
+  "rank": "DIAMOND"
+}
