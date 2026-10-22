@@ -9,3 +9,5 @@
 
     - (USER) STOP TRACKING ACCOUNT : Removes selected Riot account from the tracked List
     If the account exists on the list
+
+    - (USER) USER MAIN ACCOUNT : Users can add their main LOL account to their profile. This can later on be used for customization.
