@@ -148,8 +148,4 @@ public class AccountController implements IAccountController {
     public void stopTrackingAccount(Context ctx) {
 
     }
-
-    private void update(String region, String puuid){
-
-    }
 }
