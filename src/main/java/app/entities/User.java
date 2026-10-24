@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,7 +28,8 @@ public class User implements IUser {
     @ManyToMany
     private Set<Role> roles = new HashSet<>();
 
-
+    private List<String> trackedAccounts = new ArrayList<>();
+    private String mainAccountPuuid = null;
 
     public User(String username, String password) {
         this.username = username;
@@ -52,5 +55,29 @@ public class User implements IUser {
     @Override
     public void removeRole(String role) {
         roles.removeIf(r -> r.getRole().equals(role));
+    }
+
+    @Override
+    public List<String> trackAccount(String puuid) {
+        trackedAccounts.add(puuid);
+        return trackedAccounts;
+    }
+
+    @Override
+    public List<String> stopTrackingAccount(String puuid) {
+        trackedAccounts.remove(puuid);
+        return trackedAccounts;
+    }
+
+    @Override
+    public String setMainAccount(String puuid) {
+        mainAccountPuuid = puuid;
+        return mainAccountPuuid;
+    }
+
+    @Override
+    public String removeMainAccount(String puuid) {
+        mainAccountPuuid = null;
+        return null;
     }
 }

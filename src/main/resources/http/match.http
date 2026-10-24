@@ -1,0 +1,15 @@
+### Find match details
+POST http://localhost:7070/match/find
+Content-Type: application/json
+
+{
+  "matchId" : "EUN1_4018287735",
+  "region" : "eun1",
+  "championId" :  "Belveth",
+  "win" : "false",
+  "kills" :  5,
+  "deaths" : 12,
+  "assists" :  6,
+  "gameDuration" : 1663,
+  "gameCreation" : 1792666452593
+}

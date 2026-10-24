@@ -8,7 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 
 public class MatchMapper {
-    MatchPreview toEntity(MatchDTO dto, String puuid) {
+    public MatchPreview toEntity(MatchDTO dto, String puuid) {
         ParticipantDTO participant = dto.getInfo()
                 .getParticipants()
                 .stream()
@@ -30,9 +30,10 @@ public class MatchMapper {
         return matchPreview;
     }
 
-    MatchPreviewDTO toDTO (MatchPreview matchPreview) {
+    public MatchPreviewDTO toDTO (MatchPreview matchPreview) {
         return new MatchPreviewDTO(
                 matchPreview.getMatchId(),
+                matchPreview.getRegion(),
                 matchPreview.getChampionId(),
                 matchPreview.isWin(),
                 matchPreview.getKills(),
@@ -43,7 +44,7 @@ public class MatchMapper {
         );
     }
 
-    MatchPreviewDTO toDTO(MatchDTO dto, String puuid) {
+    public MatchPreviewDTO toDTO(MatchDTO dto, String puuid, String region) {
         ParticipantDTO participant = dto.getInfo()
                 .getParticipants()
                 .stream()
@@ -54,6 +55,7 @@ public class MatchMapper {
                 ));
         MatchPreviewDTO matchPreviewDTO = new MatchPreviewDTO(
                 dto.getMetadata().getMatchId(),
+                region,
                 participant.getChampionName(),
                 participant.isWin(),
                 participant.getKills(),

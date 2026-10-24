@@ -1,4 +1,4 @@
-    - (ANYONE) MATCH DATA : Save at least 20 matches in DB when fetching account data.
+    - (ADD-ON) MATCH DATA : Calculate winrate from match history. check
 
     - (ADMIN) Update Champions : Updates the data on champions in DB
      Returns a Json of all champions

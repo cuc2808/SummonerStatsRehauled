@@ -7,13 +7,9 @@ import jakarta.persistence.EntityManagerFactory;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static app.config.HibernateConfig.emf;
+
 public class MatchPreviewDAO implements IDAO<MatchPreview> {
-
-    private final EntityManagerFactory emf;
-
-    public MatchPreviewDAO(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
 
     @Override
     public MatchPreview save(MatchPreview matchPreview) {

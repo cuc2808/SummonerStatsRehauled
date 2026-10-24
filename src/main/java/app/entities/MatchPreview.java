@@ -19,6 +19,7 @@ public class MatchPreview {
     @Column(nullable = false)
     private String puuid;
 
+    private String region;
     private String championId;
     private boolean win;
     private int kills;
