@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Id;
 
 public class ChampionMapper {
-    Champion toEntity(ChampionDTO dto) {
+    public Champion toEntity(ChampionDTO dto) {
         return new Champion(
                 dto.getId(),
                 dto.getKey(),

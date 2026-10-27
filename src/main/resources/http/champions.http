@@ -1,0 +1,4 @@
+### Update champions in DB
+POST https://localhost:7070/champion/update
+Content-Type: application/json
+Authorization: Bearer

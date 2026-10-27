@@ -1,9 +1,11 @@
 package app.config;
 
 import app.controllers.AccountController;
+import app.controllers.ChampionController;
 import app.controllers.MatchController;
 import app.daos.UserDAO;
 import app.routes.AccountRoutes;
+import app.routes.ChampionRoutes;
 import app.routes.MatchRoutes;
 import app.routes.SecurityRoutes;
 import app.security.SecurityController;
@@ -36,10 +38,12 @@ public class ApplicationConfig {
         );
         AccountController accountController = new AccountController();
         MatchController matchController = new MatchController();
+        ChampionController championController = new ChampionController();
 
         SecurityRoutes securityRoutes = new SecurityRoutes(securityController);
         AccountRoutes accountRoutes = new AccountRoutes(accountController);
         MatchRoutes matchRoutes = new MatchRoutes(matchController);
+        ChampionRoutes championRoutes = new ChampionRoutes(championController);
 
 
         Javalin app = Javalin.create(config -> {
@@ -47,6 +51,7 @@ public class ApplicationConfig {
             config.router.apiBuilder(securityRoutes.getSecuredRoutes());
             config.router.apiBuilder(accountRoutes.getAccountRoutes());
             config.router.apiBuilder(matchRoutes.getAccountRoutes());
+            config.router.apiBuilder(championRoutes.getChampionRoutes());
         });
         app.beforeMatched(securityController::authenticate); // check if there is a valid token in the header
         app.beforeMatched(securityController::authorize); // check if the user has the required role
