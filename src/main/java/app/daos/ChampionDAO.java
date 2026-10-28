@@ -29,7 +29,7 @@ public class ChampionDAO implements IDAO<Champion> {
     public Set<Champion> get() {
         try (EntityManager em = emf.createEntityManager()) {
             return em.createQuery(
-                    "SELECT c FROM Champion c",
+                    "SELECT c FROM Champion c ORDER by c.name asc",
                     Champion.class
             ).getResultStream().collect(Collectors.toSet());
         }

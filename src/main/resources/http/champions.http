@@ -1,4 +1,3 @@
 ### Update champions in DB
-POST https://localhost:7070/champion/update
-Content-Type: application/json
-Authorization: Bearer
+POST http://localhost:7070/champion/update
+Authorization: Bearer {{jwt_token}}

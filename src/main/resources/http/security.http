@@ -35,3 +35,16 @@ Authorization: Bearer {{jwt_token}}
 ### Test protected ADMIN endpoint
 GET http://localhost:7070/protected/admin_demo
 Authorization: Bearer {{jwt_token}}
+
+### ADMIN LOGIN
+POST http://localhost:7070/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin28cuc8peter",
+  "password": "gabriellugter123"
+}
+
+> {%
+    client.global.set("jwt_token", response.body.token);
+%}
