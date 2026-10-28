@@ -193,6 +193,46 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.20.1</version>
         </dependency>
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>6.0.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Hamcrest for matchers -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit 6 API for writing test cases -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>6.0.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit 6 Engine for running tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>6.0.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Optional: REST Assured JSON Path for handling JSON responses -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-path</artifactId>
+            <version>6.0.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
