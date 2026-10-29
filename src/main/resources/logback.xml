@@ -1,17 +1,44 @@
 <configuration>
 
+    <!-- Console: IntelliJ og Docker -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!-- Default level for everything -->
+    <!-- File: Automatisk log rotation -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>logs/application.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <!-- Ny fil hver dag og ved 10 MB -->
+            <fileNamePattern>logs/application.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+
+            <!-- Maksimal størrelse pr. arkiveret logfil -->
+            <maxFileSize>10MB</maxFileSize>
+
+            <!-- Behold højst 7 dages historik -->
+            <maxHistory>7</maxHistory>
+
+            <!-- Maksimalt 100 MB arkiverede logs -->
+            <totalSizeCap>100MB</totalSizeCap>
+
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+    </appender>
+
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
 
-    <!-- Silence noisy frameworks -->
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.testcontainers" level="WARN"/>
     <logger name="com.github.dockerjava" level="WARN"/>
