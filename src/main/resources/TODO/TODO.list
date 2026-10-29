@@ -1,8 +1,5 @@
     - (ADD-ON) MATCH DATA : Calculate winrate from match history. check
 
-    - (ADMIN) Update Champions : Updates the data on champions in DB
-     Returns a Json of all champions
-
      ** Should have a system that checks the champion pool once every 24 hours.
 
     - (USER) TRACK ACCOUNT : Adds a Riot Account to the User's tracking list

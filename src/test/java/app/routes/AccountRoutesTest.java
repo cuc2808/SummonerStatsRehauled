@@ -47,7 +47,7 @@ class AccountRoutesTest {
                 .statusCode(200)
                 .body("accountIdentity.gameName", equalTo("CUC"))
                 .body("accountEntries.find { it.queueType == 'RANKED_SOLO_5x5' }.tier",
-                        equalTo("EMERALD"));
+                        equalTo("EMERALD")); //Account might be higher rank, test to find out.
 
     }
 }
