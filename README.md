@@ -56,6 +56,24 @@ The following software and resources must be met to run the application.
 - **Docker** If Postgres is up via. Docker.
 - **Riot API key** Our project hasn't been officially authorized by Riot Games, therefore the dev must get a new key every 24h from the Riot Games Developer Portal.
 
+### Architecture
+The application divides HTTP request handling, logic, data access,
+external API communication, and database configuration into dedicated packages:
+
+- **routes:** Defines the application's REST endpoints and connects incoming HTTP requests to corresponding controllers.
+- **controllers:** Handles incoming requests, extracts request data (typically Json or an object extracted from Json), calls services, daos or other components, and returns HTTP responses.
+- **service:** Contains business logic and application-level operations, such as account processing, statistics calculations, and user-related functionality. The User service is mostly as of now.
+- **daos:** Provides DAOs for retrieving, creating, and updating persistent data. There's also a common IDAO interface, that most of the DAOs implement.
+- **entities:** Contains the application's persistent data, including users, roles, champions, match previews, and League of Legends account data (see entity registry in config).
+- **dtos:** Contains Data Transfer Objects used for non-persistent data between the application, external APIs, and clients. The dtos usually represent data of the entities before they're persisted or data from more than one entity (see AccountOverviewDTO for example).
+- **mappers:** Converts data between DTOs and entities when it's required.
+- **client:** Handles communication with the Riot Games API through RiotApiClient and APIReader.
+- **security:** Contains authentication and authorization components, including token handling, security interfaces, and security-related messages.
+- **config:** Handles application configuration and Hibernate setup, including database connection and entity registration.
+- **concurrency:** Separates concurrency-related functionality from the main application logic.
+- **exceptions:** Contains custom exceptions for API errors, token creation and verification, and authorization failures.
+- **utils:** Contains shared utility functionality used across the application.
+
 ### Environment Variables
 
 The application uses specific variables the Dev must implement themselves.
@@ -87,12 +105,21 @@ Again, these are all potential improvements and might be added further as develo
 ### Developers
 
 This project was developed as part of the Computer Science Programme in Lyngby in Denmark.
-
 Project: SummonerStatsRehauled
-Repository: https://github.com/cuc2808/SummonerStatsRehauled
 
 Authors:
 
 **Christopher U. Christensen**,
 
 **Peter Maersk Frilund Søndergaard**
+
+### Links
+Deployed application:  
+http://summonerstats.com
+
+Source code repository:  
+https://github.com/cuc2808/SummonerStatsRehauled
+
+Portfolio websites:  
+Christopher: https://cuc2808.github.io/Portfolio/
+Peter: https://peter-kunosu.github.io/

@@ -1,11 +1,11 @@
 package app.client;
 
-import app.config.ConfigProperties;
 import app.dtos.accountdtos.AccountEntriesDTO;
 import app.dtos.accountdtos.AccountIdentityDTO;
 import app.dtos.accountdtos.AccountStateDTO;
 import app.dtos.championdtos.ChampionDTO;
 import app.dtos.matchdtos.MatchDTO;
+import app.utils.Utils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class RiotApiClient {
     // APIKEY
-    private static String apiKey = ConfigProperties.get("API_KEY");
+    private static String apiKey = Utils.getPropertyValue("API_KEY", "config.properties");
 
     //APIReader instance and ObjectMapper
     private static APIReader apiReader = new APIReader();
