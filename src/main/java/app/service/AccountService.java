@@ -25,7 +25,6 @@ public class AccountService {
 
             double winrate = calculateWinrate (wins, losses);
 
-            System.out.println(entry.getQueueType());
             switch (entry.getQueueType()) {
                 case "RANKED_SOLO_5x5":
                     soloDuoWinrate = winrate;

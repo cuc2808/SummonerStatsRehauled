@@ -1,5 +1,6 @@
 package app.client;
 
+import app.config.ConfigProperties;
 import app.dtos.accountdtos.AccountEntriesDTO;
 import app.dtos.accountdtos.AccountIdentityDTO;
 import app.dtos.accountdtos.AccountStateDTO;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class RiotApiClient {
     // APIKEY
-    private static String apiKey = System.getenv("api_key");
+    private static String apiKey = ConfigProperties.get("API_KEY");
 
     //APIReader instance and ObjectMapper
     private static APIReader apiReader = new APIReader();

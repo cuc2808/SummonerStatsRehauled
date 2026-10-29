@@ -9,6 +9,7 @@ import app.routes.ChampionRoutes;
 import app.routes.MatchRoutes;
 import app.routes.SecurityRoutes;
 import app.security.SecurityController;
+import app.config.ConfigProperties;
 import io.javalin.Javalin;
 import lombok.*;
 
@@ -20,16 +21,9 @@ public class ApplicationConfig {
     public void appStart() {
         UserDAO userDAO = new UserDAO();
 
-        String issuer = System.getenv("ISSUER") != null
-                ? System.getenv("ISSUER")
-                : "SummonerStats";
-
-        int expireTimeInMillis = System.getenv("TOKEN_EXPIRE_TIME") != null
-                ? Integer.parseInt(System.getenv("TOKEN_EXPIRE_TIME"))
-                : 3600000;
-
-        String secretKey = System.getenv("SECRET_KEY");
-
+        String issuer = ConfigProperties.get("ISSUER");
+        int expireTimeInMillis = Integer.parseInt(ConfigProperties.get("TOKEN_EXPIRE_TIME"));
+        String secretKey = ConfigProperties.get("SECRET_KEY");
         SecurityController securityController = new SecurityController(
                 userDAO,
                 issuer,
