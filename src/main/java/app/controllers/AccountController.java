@@ -114,7 +114,7 @@ public class AccountController implements IAccountController {
 
             AccountOverviewDTO accountOverviewDTO = new AccountOverviewDTO(accountIdentity, accountEntriesArray, accountState, matchIds, matchPreviewList, accountStatisticsDTO);
 
-            System.out.println("DB - ACCOUNT FOUND : " + gameName + "#" + tagLine + ", REGION " + region);
+            logger.info("DB - ACCOUNT FOUND : " + gameName + "#" + tagLine + ", REGION " + region);
             ctx.status(200).json(accountOverviewDTO);
         } else {
             addAccount(ctx);
@@ -134,7 +134,7 @@ public class AccountController implements IAccountController {
             tagLine = previewDTO.tagLine();
             region = previewDTO.region();
         } else {
-            System.out.println("DB - NO ACCOUNT OR NOTHING TO COMPUTE");
+            logger.info("DB - NO ACCOUNT OR NOTHING TO COMPUTE");
             return;
         }
 
