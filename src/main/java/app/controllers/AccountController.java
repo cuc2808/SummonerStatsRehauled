@@ -38,10 +38,6 @@ public class AccountController implements IAccountController {
     private AccountEntriesDAO accountEntriesDAO = new AccountEntriesDAO();
     private AccountService accountService = new AccountService();
 
-
-
-
-
     @Override
     public void addAccount(Context ctx) {
         AccountSearchDTO searchDTO = ctx.bodyAsClass(AccountSearchDTO.class);
