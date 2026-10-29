@@ -1,29 +1,29 @@
 <configuration>
 
-    <!-- Console: IntelliJ og Docker -->
+    <!-- Console: IntelliJ AND Docker -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!-- File: Automatisk log rotation -->
+    <!-- File: AUTOMATIC log rotation -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
         <file>logs/application.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 
-            <!-- Ny fil hver dag og ved 10 MB -->
+            <!-- New file each day and every 10 MB -->
             <fileNamePattern>logs/application.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
 
-            <!-- Maksimal størrelse pr. arkiveret logfil -->
+            <!-- Max size pr. archived logfile -->
             <maxFileSize>10MB</maxFileSize>
 
-            <!-- Behold højst 7 dages historik -->
+            <!-- Max 7 days History -->
             <maxHistory>7</maxHistory>
 
-            <!-- Maksimalt 100 MB arkiverede logs -->
+            <!-- Max 100 mb logs -->
             <totalSizeCap>100MB</totalSizeCap>
 
         </rollingPolicy>
