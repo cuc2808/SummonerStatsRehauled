@@ -8,11 +8,14 @@ import app.entities.Champion;
 import app.mappers.ChampionMapper;
 import io.javalin.http.Context;
 import jakarta.persistence.EntityManagerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Set;
 
 public class ChampionController {
+    private static final Logger logger = LoggerFactory.getLogger(ChampionController.class);
     RiotApiClient riotApiClient = new RiotApiClient();
     ChampionMapper championMapper = new ChampionMapper();
     EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
@@ -30,6 +33,7 @@ public class ChampionController {
 
         Set<Champion> champions = championDAO.get();
 
+        logger.info("All Champions successfully updated!");
         ctx.status(200);
         ctx.json(champions);
     }

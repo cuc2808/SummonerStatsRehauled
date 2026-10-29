@@ -18,6 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.javalin.http.Context;
 import jakarta.persistence.EntityManagerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 public class AccountController implements IAccountController {
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
     private static final RiotApiClient riotApiClient = new RiotApiClient();
     private static final AccountMapper accountMapper = new AccountMapper();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -34,6 +37,7 @@ public class AccountController implements IAccountController {
     private AccountStateDAO accountStateDAO = new AccountStateDAO();
     private AccountEntriesDAO accountEntriesDAO = new AccountEntriesDAO();
     private AccountService accountService = new AccountService();
+
 
 
 
@@ -78,7 +82,7 @@ public class AccountController implements IAccountController {
         //Hibernate finds id's
         AccountOverviewDTO accountOverviewDTO = new AccountOverviewDTO(identity, entries, state, matchIds, matchPreviewList, accountStatisticsDTO);
 
-        System.out.println("DB - ACCOUNT ADDED : " + gameName + "#" + tagLine + ", REGION " + region);
+       logger.info("DB - ACCOUNT ADDED : {}#{}, REGION {}", gameName, tagLine, region);
         ctx.status(200).json(accountOverviewDTO);
     }
 
@@ -110,7 +114,7 @@ public class AccountController implements IAccountController {
 
             AccountOverviewDTO accountOverviewDTO = new AccountOverviewDTO(accountIdentity, accountEntriesArray, accountState, matchIds, matchPreviewList, accountStatisticsDTO);
 
-            System.out.println("DB - ACCOUNT FOUND : " + gameName + "#" + tagLine + ", REGION " + region);
+            logger.info("DB - ACCOUNT FOUND : " + gameName + "#" + tagLine + ", REGION " + region);
             ctx.status(200).json(accountOverviewDTO);
         } else {
             addAccount(ctx);
@@ -130,7 +134,7 @@ public class AccountController implements IAccountController {
             tagLine = previewDTO.tagLine();
             region = previewDTO.region();
         } else {
-            System.out.println("DB - NO ACCOUNT OR NOTHING TO COMPUTE");
+            logger.info("DB - NO ACCOUNT OR NOTHING TO COMPUTE");
             return;
         }
 
@@ -184,7 +188,7 @@ public class AccountController implements IAccountController {
 
         AccountOverviewDTO accountOverviewDTO = new AccountOverviewDTO(identity, entries, state, matchIds, matchPreviewList, accountStatisticsDTO);
 
-        System.out.println("DB - ACCOUNT UPDATE : " + gameName + "#" + tagLine + ", REGION " + region);
+        logger.info("DB - ACCOUNT UPDATED: {}#{}, REGION {}", gameName, tagLine, region);
         ctx.status(200).json(accountOverviewDTO);
     }
 

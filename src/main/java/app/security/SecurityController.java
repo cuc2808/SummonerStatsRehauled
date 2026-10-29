@@ -46,6 +46,7 @@ public class SecurityController implements ISecurityController {
         response.put("token", token);
         response.put("username", verifiedUser.getUsername());
 
+        logger.info("USER logged in - " + username);
         ctx.status(200).json(response);
     }
 
@@ -62,6 +63,7 @@ public class SecurityController implements ISecurityController {
         response.put("token", token);
         response.put("username", newUser.getUsername());
 
+        logger.info("USER registered - " + username);
         ctx.status(200).json(response);
     }
 
