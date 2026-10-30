@@ -279,7 +279,7 @@ Authors:
 
 ### Links
 Deployed application:  
-http://summonerstats.com
+https://summonerstats.com/
 
 Source code repository:  
 https://github.com/cuc2808/SummonerStatsRehauled
