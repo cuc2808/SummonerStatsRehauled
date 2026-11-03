@@ -21,7 +21,7 @@ public class AccountRoutes {
         return ()->{
             path("/account", ()->{
                 get("/test", ctx->ctx.json(jsonMapper.createObjectNode().put("msg",  "Hello from Open")), SecurityRoutes.Role.ANYONE);
-                post("/find", accountController::findAccount, SecurityRoutes.Role.ANYONE);
+                get("/find", accountController::findAccount, SecurityRoutes.Role.ANYONE);
                 post("/update", accountController::updateAccount, SecurityRoutes.Role.ANYONE);
             });
         };

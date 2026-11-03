@@ -39,9 +39,7 @@ public class AccountController implements IAccountController {
     private AccountService accountService = new AccountService();
 
     @Override
-    public void addAccount(Context ctx) {
-        AccountSearchDTO searchDTO = ctx.bodyAsClass(AccountSearchDTO.class);
-
+    public void addAccount(Context ctx, AccountSearchDTO searchDTO) {
         String gameName = searchDTO.gameName();
         String tagLine = searchDTO.tagLine();
         String region = searchDTO.region();
@@ -84,11 +82,11 @@ public class AccountController implements IAccountController {
 
     @Override
     public void findAccount(Context ctx) {
-        AccountSearchDTO searchDTO = ctx.bodyAsClass(AccountSearchDTO.class);
+        String region = ctx.queryParam("region");
+        String gameName = ctx.queryParam("gameName");
+        String tagLine = ctx.queryParam("tagLine");
 
-        String gameName = searchDTO.gameName();
-        String tagLine = searchDTO.tagLine();
-        String region = searchDTO.region();
+        AccountSearchDTO searchDTO = new AccountSearchDTO(gameName, tagLine, region);
 
         AccountIdentity accountIdentity = accountIdentityDAO.getByGameNameTagLineAndRegion(gameName, tagLine, region);
         AccountState accountState;
@@ -113,7 +111,7 @@ public class AccountController implements IAccountController {
             logger.info("DB - ACCOUNT FOUND : " + gameName + "#" + tagLine + ", REGION " + region);
             ctx.status(200).json(accountOverviewDTO);
         } else {
-            addAccount(ctx);
+            addAccount(ctx, searchDTO);
         }
     }
 
