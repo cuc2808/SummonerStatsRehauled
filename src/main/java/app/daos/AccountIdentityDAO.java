@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import static app.config.HibernateConfig.emf;
 
@@ -83,13 +84,13 @@ public class AccountIdentityDAO implements IDAO<AccountIdentity> {
         try (EntityManager em = emf.createEntityManager()) {
             return em.createQuery(
                             "SELECT a FROM AccountIdentity a " +
-                                    "WHERE a.gameName = :gameName " +
-                                    "AND a.tagLine = :tagLine " +
+                                    "WHERE lower(a.gameName) = :gameName " +
+                                    "AND lower(a.tagLine) = :tagLine " +
                                     "AND a.region = :region",
                             AccountIdentity.class
                     )
-                    .setParameter("gameName", gameName)
-                    .setParameter("tagLine", tagLine)
+                    .setParameter("gameName", gameName.toLowerCase(Locale.ROOT))
+                    .setParameter("tagLine", tagLine.toLowerCase(Locale.ROOT))
                     .setParameter("region", region)
                     .getResultStream()
                     .findFirst()

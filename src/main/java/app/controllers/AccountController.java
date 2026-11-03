@@ -15,6 +15,8 @@ import app.entities.account.AccountState;
 import app.mappers.AccountMapper;
 import app.mappers.MatchMapper;
 import app.service.AccountService;
+import app.exceptions.ApiException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.javalin.http.Context;
@@ -25,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class AccountController implements IAccountController {
@@ -38,9 +41,13 @@ public class AccountController implements IAccountController {
     private AccountStateDAO accountStateDAO = new AccountStateDAO();
     private AccountEntriesDAO accountEntriesDAO = new AccountEntriesDAO();
     private AccountService accountService = new AccountService();
+    private static final Set<String> SUPPORTED_REGIONS = Set.of(
+            "br1", "eun1", "euw1", "jp1", "kr", "la1", "la2", "na1",
+            "oc1", "tr1", "ru", "ph2", "sg2", "th2", "tw2", "vn2", "me1");
 
     @Override
     public void addAccount(Context ctx, AccountSearchDTO searchDTO) {
+        searchDTO = validateSearch(searchDTO);
         String gameName = searchDTO.gameName();
         String tagLine = searchDTO.tagLine();
         String region = searchDTO.region();
@@ -83,11 +90,11 @@ public class AccountController implements IAccountController {
 
     @Override
     public void findAccount(Context ctx) {
-        String region = ctx.queryParam("region");
-        String gameName = ctx.queryParam("gameName");
-        String tagLine = ctx.queryParam("tagLine");
-
-        AccountSearchDTO searchDTO = new AccountSearchDTO(gameName, tagLine, region);
+        AccountSearchDTO searchDTO = validateSearch(new AccountSearchDTO(
+                ctx.queryParam("gameName"), ctx.queryParam("tagLine"), ctx.queryParam("region")));
+        String region = searchDTO.region();
+        String gameName = searchDTO.gameName();
+        String tagLine = searchDTO.tagLine();
 
         AccountIdentity accountIdentity = accountIdentityDAO.getByGameNameTagLineAndRegion(gameName, tagLine, region);
         AccountState accountState;
@@ -98,12 +105,7 @@ public class AccountController implements IAccountController {
             accountState = accountStateDAO.getByPuuid(accountIdentity.getPuuid());
             AccountEntries[] accountEntriesArray = accountEntries.toArray(AccountEntries[]::new);
             Set<MatchPreview> matchPreviewList = matchPreviewDAO.getByPuuid(accountIdentity.getPuuid());
-            String[] matchIds = new String[20];
-            int position = 0;
-            for (MatchPreview preview : matchPreviewList) {
-                matchIds[position] = preview.getMatchId();
-                position++;
-            }
+            String[] matchIds = matchPreviewList.stream().map(MatchPreview::getMatchId).toArray(String[]::new);
 
             AccountStatisticsDTO accountStatisticsDTO = accountService.OverallStatisticsCalculator(accountEntriesArray);
 
@@ -118,24 +120,31 @@ public class AccountController implements IAccountController {
 
     @Override
     public void updateAccount(Context ctx) {
-        AccountPreviewDTO previewDTO = ctx.bodyAsClass(AccountPreviewDTO.class);
-
-        String gameName;
-        String tagLine;
-        String region;
-
-        if (previewDTO != null) {
-            gameName = previewDTO.gameName();
-            tagLine = previewDTO.tagLine();
-            region = previewDTO.region();
-        } else {
-            logger.info("DB - NO ACCOUNT OR NOTHING TO COMPUTE");
-            return;
+        AccountPreviewDTO previewDTO;
+        try {
+            previewDTO = objectMapper.readValue(ctx.body(), AccountPreviewDTO.class);
+        } catch (JsonProcessingException e) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Request body must be a valid JSON object.");
         }
+        if (previewDTO == null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Request body must be a valid JSON object.");
+        }
+        AccountSearchDTO searchDTO = validateSearch(new AccountSearchDTO(
+                previewDTO.gameName(), previewDTO.tagLine(), previewDTO.region()));
+        String gameName = searchDTO.gameName();
+        String tagLine = searchDTO.tagLine();
+        String region = searchDTO.region();
 
         AccountIdentityDTO identityDTO = riotApiClient.getRiotAccountFromGameNameTaglineAndRegion(riotApiClient.getContinentFromRegion(region), gameName, tagLine);
         identityDTO.setRegion(region);
         String puuid = identityDTO.getPuuid();
+
+        AccountIdentity existingIdentity = accountIdentityDAO.getByPuuid(puuid);
+        AccountState existingState = accountStateDAO.getByPuuid(puuid);
+        if (existingIdentity == null || existingState == null) {
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "Account has not been added yet. Find the account before updating it.");
+        }
 
         AccountStateDTO stateDTO = riotApiClient.getAccountState(puuid, region);
         AccountEntriesDTO[] entriesDTOs = riotApiClient.getAccountEntries(puuid, region);
@@ -148,8 +157,6 @@ public class AccountController implements IAccountController {
         List<MatchDTO> matchHistory = riotApiClient.getMatchHistoryInMatchDTOs(matchIds, riotApiClient.getContinentFromRegion(region));
 
 
-        AccountIdentity existingIdentity = accountIdentityDAO.getByPuuid(identity.getPuuid());
-        AccountState existingState = accountStateDAO.getByPuuid(state.getPuuid());
         Set<AccountEntries> existingEntries = accountEntriesDAO.getByPuuid(identity.getPuuid());
         matchPreviewDAO.deleteByPuuid(identity.getPuuid());
 
@@ -185,6 +192,26 @@ public class AccountController implements IAccountController {
 
         logger.info("DB - ACCOUNT UPDATED: {}#{}, REGION {}", gameName, tagLine, region);
         ctx.status(HttpStatus.OK).json(accountOverviewDTO);
+    }
+
+    private AccountSearchDTO validateSearch(AccountSearchDTO search) {
+        if (search == null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Account search is required.");
+        }
+        String gameName = requireField(search.gameName(), "gameName");
+        String tagLine = requireField(search.tagLine(), "tagLine");
+        String region = requireField(search.region(), "region").toLowerCase(Locale.ROOT);
+        if (!SUPPORTED_REGIONS.contains(region)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Unsupported region.");
+        }
+        return new AccountSearchDTO(gameName, tagLine, region);
+    }
+
+    private String requireField(String value, String field) {
+        if (value == null || value.isBlank()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, field + " is required.");
+        }
+        return value.strip();
     }
 
     @Override

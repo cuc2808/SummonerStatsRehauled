@@ -9,7 +9,6 @@ import java.time.Instant;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-/** Tracks Retry-After cooldowns for the hosts contacted by one APIReader. */
 final class RateLimitHandler {
     private final ConcurrentMap<String, Instant> retryAfterByHost = new ConcurrentHashMap<>();
 

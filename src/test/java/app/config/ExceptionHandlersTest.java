@@ -1,48 +1,63 @@
 package app.config;
 
-import io.javalin.http.HttpStatus;
 import app.exceptions.ApiException;
 import app.exceptions.RiotApiException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
+import io.javalin.http.HttpStatus;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 
 class ExceptionHandlersTest {
-    @Test
-    void returnsJsonStatusAndRetryAfterWithoutStartingDatabase() throws Exception {
-        Javalin app = Javalin.create();
+    private Javalin app;
+
+    @BeforeEach
+    void setUp() {
+        app = Javalin.create();
         ExceptionHandlers.register(app);
+
+        // Test routes throw known exceptions so we can verify the HTTP response.
         app.get("/limited", ctx -> {
             throw new RiotApiException(HttpStatus.TOO_MANY_REQUESTS, "Please try again later.", 30L);
         });
         app.get("/unauthorized", ctx -> {
             throw new ApiException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         });
-        try {
-            app.start(0);
-            try (HttpClient client = HttpClient.newHttpClient()) {
-                var response = client.send(HttpRequest.newBuilder(URI.create("http://localhost:" + app.port() + "/limited")).build(),
-                        HttpResponse.BodyHandlers.ofString());
-                assertEquals(429, response.statusCode());
-                assertEquals("30", response.headers().firstValue("Retry-After").orElseThrow());
-                var json = new ObjectMapper().readTree(response.body());
-                assertEquals(429, json.get("status").asInt());
-                assertEquals("Please try again later.", json.get("message").asText());
+        app.start(0);
+    }
 
-                var unauthorized = client.send(HttpRequest.newBuilder(URI.create("http://localhost:" + app.port() + "/unauthorized")).build(),
-                        HttpResponse.BodyHandlers.ofString());
-                assertEquals(401, unauthorized.statusCode());
-                assertTrue(unauthorized.headers().firstValue("Retry-After").isEmpty());
-            }
-        } finally {
-            app.stop();
-        }
+    @AfterEach
+    void tearDown() {
+        app.stop();
+    }
+
+    @Test
+    void returnsJsonAndRetryAfterForRateLimitException() {
+        given()
+                .port(app.port())
+                .when()
+                .get("/limited")
+                .then()
+                .statusCode(HttpStatus.TOO_MANY_REQUESTS.getCode())
+                .contentType("application/json")
+                .header("Retry-After", equalTo("30"))
+                .body("status", equalTo(HttpStatus.TOO_MANY_REQUESTS.getCode()))
+                .body("message", equalTo("Please try again later."));
+    }
+
+    @Test
+    void returnsUnauthorizedWithoutRetryAfterForLoginError() {
+        given()
+                .port(app.port())
+                .when()
+                .get("/unauthorized")
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.getCode())
+                .header("Retry-After", nullValue())
+                .body("status", equalTo(HttpStatus.UNAUTHORIZED.getCode()))
+                .body("message", equalTo("Unauthorized"));
     }
 }
