@@ -46,12 +46,10 @@ public class UserDAO implements IUserDAO {
                     .getResultStream()
                     .findFirst()
                     .orElse(null);
-            Hibernate.initialize(user.getRoles());
-
             if (user == null || !user.verifyPassword(password)) {
                 return null;
             }
-
+            Hibernate.initialize(user.getRoles());
             return user;
         }
     }
@@ -59,7 +57,7 @@ public class UserDAO implements IUserDAO {
     @Override
     public User createUser(String username, String password) {
         try (EntityManager em = emf.createEntityManager()) {
-
+            em.getTransaction().begin();
             User user = new User(username, password);
             Role userRole = em.createQuery(
                             "SELECT r FROM Role r WHERE r.role = :role",
@@ -76,7 +74,6 @@ public class UserDAO implements IUserDAO {
 
             user.addRole(userRole);
 
-            em.getTransaction().begin();
             em.persist(user);
             em.getTransaction().commit();
 

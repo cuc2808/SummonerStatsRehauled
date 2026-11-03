@@ -21,9 +21,11 @@ public class ApplicationConfig {
     public void appStart() {
         UserDAO userDAO = new UserDAO();
 
-        String issuer = Utils.getPropertyValue("ISSUER", "config.properties");
-        int expireTimeInMillis = Integer.parseInt(Utils.getPropertyValue("TOKEN_EXPIRE_TIME", "config.properties"));
-        String secretKey = Utils.getPropertyValue("SECRET_KEY", "config.properties");
+        boolean deployed = System.getenv("DEPLOYED") != null;
+        String issuer = deployed ? System.getenv("ISSUER") : Utils.getPropertyValue("ISSUER", "config.properties");
+        String expiration = deployed ? System.getenv("TOKEN_EXPIRE_TIME") : Utils.getPropertyValue("TOKEN_EXPIRE_TIME", "config.properties");
+        int expireTimeInMillis = Integer.parseInt(expiration);
+        String secretKey = deployed ? System.getenv("SECRET_KEY") : Utils.getPropertyValue("SECRET_KEY", "config.properties");
         SecurityController securityController = new SecurityController(userDAO, issuer, expireTimeInMillis, secretKey);
         AccountController accountController = new AccountController();
         MatchController matchController = new MatchController();

@@ -5,7 +5,7 @@ package app.exceptions;
  */
 public class TokenVerificationException extends Exception {
     /**
-     * Constructs a TokenCreationException with the specified message and cause.
+     * Constructs a TokenVerificationException with the specified message and cause.
      *
      * @param message the detail message
      * @param cause the cause of the exception
