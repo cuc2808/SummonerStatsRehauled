@@ -1,11 +1,8 @@
 package app.controllers;
 
-
 import app.client.RiotApiClient;
-import app.daos.MatchPreviewDAO;
 import app.dtos.matchdtos.MatchDTO;
 import app.dtos.matchdtos.MatchPreviewDTO;
-import app.entities.MatchPreview;
 import io.javalin.http.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

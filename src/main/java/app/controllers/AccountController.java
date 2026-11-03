@@ -15,13 +15,10 @@ import app.mappers.AccountMapper;
 import app.mappers.MatchMapper;
 import app.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.javalin.http.Context;
-import jakarta.persistence.EntityManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -78,7 +75,7 @@ public class AccountController implements IAccountController {
         //Hibernate finds id's
         AccountOverviewDTO accountOverviewDTO = new AccountOverviewDTO(identity, entries, state, matchIds, matchPreviewList, accountStatisticsDTO);
 
-       logger.info("DB - ACCOUNT ADDED : {}#{}, REGION {}", gameName, tagLine, region);
+        logger.info("DB - ACCOUNT ADDED : {}#{}, REGION {}", gameName, tagLine, region);
         ctx.status(200).json(accountOverviewDTO);
     }
 
@@ -94,7 +91,7 @@ public class AccountController implements IAccountController {
         AccountState accountState;
         Set<AccountEntries> accountEntries;
 
-        if(accountIdentity != null) {
+        if (accountIdentity != null) {
             accountEntries = accountEntriesDAO.getByPuuid(accountIdentity.getPuuid());
             accountState = accountStateDAO.getByPuuid(accountIdentity.getPuuid());
             AccountEntries[] accountEntriesArray = accountEntries.toArray(AccountEntries[]::new);
@@ -159,12 +156,11 @@ public class AccountController implements IAccountController {
         state.setId(existingState.getId());
         for (AccountEntries existingEntry : existingEntries) {
             for (AccountEntries entry : entries) {
-                if(existingEntry.getQueueType().equals(entry.getQueueType())) {
+                if (existingEntry.getQueueType().equals(entry.getQueueType())) {
                     entry.setId(existingEntry.getId());
                 }
             }
         }
-
 
 
         accountIdentityDAO.update(identity);
