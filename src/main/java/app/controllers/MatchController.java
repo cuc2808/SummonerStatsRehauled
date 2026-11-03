@@ -1,5 +1,6 @@
 package app.controllers;
 
+import io.javalin.http.HttpStatus;
 
 import app.client.RiotApiClient;
 import app.daos.MatchPreviewDAO;
@@ -20,6 +21,6 @@ public class MatchController {
         MatchDTO matchDTO = riotApiClient.getMatchFromId(riotApiClient.getContinentFromRegion(matchPreviewDTO.region()), matchPreviewDTO.matchId());
 
         logger.info("MATCH DETAILS ID: {}, REGION {}", matchDTO.getInfo().getGameId(), matchPreviewDTO.region());
-        ctx.status(200).json(matchDTO);
+        ctx.status(HttpStatus.OK).json(matchDTO);
     }
 }

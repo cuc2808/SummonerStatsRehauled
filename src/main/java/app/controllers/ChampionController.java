@@ -1,5 +1,6 @@
 package app.controllers;
 
+import io.javalin.http.HttpStatus;
 import app.client.RiotApiClient;
 import app.config.HibernateConfig;
 import app.daos.ChampionDAO;
@@ -34,7 +35,7 @@ public class ChampionController {
         Set<Champion> champions = championDAO.get();
 
         logger.info("All Champions successfully updated!");
-        ctx.status(200);
+        ctx.status(HttpStatus.OK);
         ctx.json(champions);
     }
 }

@@ -42,6 +42,7 @@ public class ApplicationConfig {
             config.router.apiBuilder(matchRoutes.getAccountRoutes());
             config.router.apiBuilder(championRoutes.getChampionRoutes());
         });
+        ExceptionHandlers.register(app);
         app.beforeMatched(securityController::authenticate); // check if there is a valid token in the header
         app.beforeMatched(securityController::authorize); // check if the user has the required role
 

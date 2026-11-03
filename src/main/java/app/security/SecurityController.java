@@ -47,7 +47,7 @@ public class SecurityController implements ISecurityController {
         response.put("username", verifiedUser.getUsername());
 
         logger.info("USER logged in - " + username);
-        ctx.status(200).json(response);
+        ctx.status(HttpStatus.OK).json(response);
     }
 
     @Override
@@ -64,14 +64,14 @@ public class SecurityController implements ISecurityController {
         response.put("username", newUser.getUsername());
 
         logger.info("USER registered - " + username);
-        ctx.status(200).json(response);
+        ctx.status(HttpStatus.OK).json(response);
     }
 
     @Override
     public void authenticate(Context ctx) {
         // This is a preflight request => no need for authentication
         if (ctx.method().toString().equals("OPTIONS")) {
-            ctx.status(200);
+            ctx.status(HttpStatus.OK);
             return;
         }
         // If the endpoint is not protected with roles or is open to ANYONE role, then skip
@@ -106,7 +106,7 @@ public class SecurityController implements ISecurityController {
 
     public void verify(Context ctx) {
         UserDTO user = validateAndGetUserFromToken(ctx);
-        ctx.status(200).json(user);
+        ctx.status(HttpStatus.OK).json(user);
     }
 
     private UserDTO validateAndGetUserFromToken(Context ctx) {
@@ -130,7 +130,7 @@ public class SecurityController implements ISecurityController {
             }
         } catch (ParseException | NotAuthorizedException | TokenVerificationException e) {
             logger.error("Could not create token", e);
-            throw new ApiException(HttpStatus.UNAUTHORIZED.getCode(), "Unauthorized. Could not verify token");
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "Unauthorized. Could not verify token");
         }
     }
 

@@ -1,5 +1,6 @@
 package app.client;
 
+import io.javalin.http.HttpStatus;
 import app.dtos.accountdtos.AccountEntriesDTO;
 import app.dtos.accountdtos.AccountIdentityDTO;
 import app.dtos.accountdtos.AccountStateDTO;
@@ -7,11 +8,8 @@ import app.dtos.championdtos.ChampionDTO;
 import app.dtos.matchdtos.MatchDTO;
 import app.utils.Utils;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import app.exceptions.RiotApiException;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +17,8 @@ public class RiotApiClient {
     // APIKEY
     private static String apiKey = Utils.getPropertyValue("API_KEY", "config.properties");
 
-    //APIReader instance and ObjectMapper
+    // Shared reader also shares rate-limit cooldowns across requests.
     private static APIReader apiReader = new APIReader();
-    private static ObjectMapper objectMapper = new ObjectMapper();
 
     // API URLs - Named after operation:
     private static final String URLGetAccountIdentityFromPUUID = "https://REGION.api.riotgames.com/riot/account/v1/accounts/by-puuid/PUUID?api_key=" + apiKey;
@@ -101,18 +98,26 @@ public class RiotApiClient {
         url = url.replace("PUUID", puuid);
         JsonNode response = apiReader.getWithJackson(url, JsonNode.class);
 
-        return response.get("region").asText();
+        JsonNode region = response.get("region");
+        if (region == null || !region.isTextual() || region.asText().isBlank()) {
+            throw new RiotApiException(HttpStatus.BAD_GATEWAY, "Riot API returned a missing or invalid region.");
+        }
+        return region.asText();
     }
 
     //GET ALL CHAMPIONS
     public List<String> getAllChampionIdWithJackson() {
         List<String> nodeFromList = new ArrayList<>();
-        try {
-            JsonNode node = objectMapper.readTree(new URI(URLGetAllChampions).toURL());
-            JsonNode data = node.get("data");
-            data.elements().forEachRemaining(champion -> nodeFromList.add(champion.get("id").asText()));
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
+        JsonNode data = apiReader.getWithJackson(URLGetAllChampions, JsonNode.class, "data");
+        if (!data.isObject()) {
+            throw new RiotApiException(HttpStatus.BAD_GATEWAY, "Data Dragon returned invalid champion data.");
+        }
+        for (JsonNode champion : data) {
+            JsonNode id = champion.get("id");
+            if (id == null || !id.isTextual() || id.asText().isBlank()) {
+                throw new RiotApiException(HttpStatus.BAD_GATEWAY, "Data Dragon returned a missing or invalid champion ID.");
+            }
+            nodeFromList.add(id.asText());
         }
         return nodeFromList;
     }

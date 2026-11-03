@@ -1,5 +1,6 @@
 package app.controllers;
 
+import io.javalin.http.HttpStatus;
 import app.client.RiotApiClient;
 import app.daos.AccountEntriesDAO;
 import app.daos.AccountIdentityDAO;
@@ -77,7 +78,7 @@ public class AccountController implements IAccountController {
         AccountOverviewDTO accountOverviewDTO = new AccountOverviewDTO(identity, entries, state, matchIds, matchPreviewList, accountStatisticsDTO);
 
        logger.info("DB - ACCOUNT ADDED : {}#{}, REGION {}", gameName, tagLine, region);
-        ctx.status(200).json(accountOverviewDTO);
+        ctx.status(HttpStatus.OK).json(accountOverviewDTO);
     }
 
     @Override
@@ -109,7 +110,7 @@ public class AccountController implements IAccountController {
             AccountOverviewDTO accountOverviewDTO = new AccountOverviewDTO(accountIdentity, accountEntriesArray, accountState, matchIds, matchPreviewList, accountStatisticsDTO);
 
             logger.info("DB - ACCOUNT FOUND : " + gameName + "#" + tagLine + ", REGION " + region);
-            ctx.status(200).json(accountOverviewDTO);
+            ctx.status(HttpStatus.OK).json(accountOverviewDTO);
         } else {
             addAccount(ctx, searchDTO);
         }
@@ -183,7 +184,7 @@ public class AccountController implements IAccountController {
         AccountOverviewDTO accountOverviewDTO = new AccountOverviewDTO(identity, entries, state, matchIds, matchPreviewList, accountStatisticsDTO);
 
         logger.info("DB - ACCOUNT UPDATED: {}#{}, REGION {}", gameName, tagLine, region);
-        ctx.status(200).json(accountOverviewDTO);
+        ctx.status(HttpStatus.OK).json(accountOverviewDTO);
     }
 
     @Override
