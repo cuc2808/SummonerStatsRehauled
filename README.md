@@ -107,6 +107,11 @@ That's also the reason for the following.
 The application stores up to 20 match previews for each account in the database. Instead of requesting the same match history from Riot's API every time an account is searched for, the application can retrieve the previously stored previews locally.
 A match contains a ton of data, therefore it's easier to only store or retrieve what the User usually wants to see, if the User then wishes to see more details the external API is called.
 
+#### Parallel match fetching
+`RiotApiClient` delegates parallel match fetching to `ParallelExecutor` in the `concurrency` package. Its shared thread pool runs up to four match requests at once, with up to 100 tasks waiting in the queue. Results keep the order of the requested match IDs. If the queue is full, the application returns HTTP 503. The pool shuts down when the application stops.
+
+The existing Riot rate-limit cooldown and error handling still apply. Four concurrent requests is a local concurrency limit; it does not enforce Riot's request limits over time.
+
 #### Clean cut rehaul and Client
 In the early production the project was built simpler and as said, with more frontend in mind, therefore a lot of the application weren't low coupled and most of the features were programmed around the external API.
 So a decision was made to make a complete overhaul of the application, hence the name of the project on GitHub. The use of external API is now handled and called upon from and as a client.
@@ -260,7 +265,7 @@ Here are some of the future improvements and features that has been planned:
 1. Users can add LOL accounts to their tracking list for easier access.
 2. Users can stop tracking LOL accounts.
 3. Users can add their Main account to their profile for easier access.
-4. A thread system that can run different actions parallel, since the API allows for 20 request at once.
+4. Proactive rate limiting to control outgoing requests according to Riot's rate-limit windows.
 5. A system that adds customization via. the user's profile and the connection with the Main LOL account.
 6. Better statistics. This could include where the LOL account is placed on a leaderboard and so on...
 

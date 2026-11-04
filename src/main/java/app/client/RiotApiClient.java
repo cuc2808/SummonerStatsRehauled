@@ -1,5 +1,6 @@
 package app.client;
 
+import app.concurrency.ParallelExecutor;
 import io.javalin.http.HttpStatus;
 import app.dtos.accountdtos.AccountEntriesDTO;
 import app.dtos.accountdtos.AccountIdentityDTO;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import app.exceptions.RiotApiException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RiotApiClient {
@@ -84,12 +86,8 @@ public class RiotApiClient {
 
     //MATCH HISTORY IN LIST
     public List<MatchDTO> getMatchHistoryInMatchDTOs(String[] matchIds, String region) {
-        List<MatchDTO> matchHistory = new ArrayList<>();
-        for (String matchId : matchIds) {
-            MatchDTO match = getMatchFromId(region, matchId);
-            matchHistory.add(match);
-        }
-        return matchHistory;
+        return ParallelExecutor.SHARED.map(Arrays.asList(matchIds),
+                matchId -> getMatchFromId(region, matchId));
     }
 
     //PLAYER ACTIVE REGION

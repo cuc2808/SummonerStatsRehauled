@@ -1,5 +1,6 @@
 package app.config;
 
+import app.concurrency.ParallelExecutor;
 import app.controllers.AccountController;
 import app.controllers.ChampionController;
 import app.controllers.MatchController;
@@ -38,6 +39,7 @@ public class ApplicationConfig {
 
 
         Javalin app = Javalin.create(config -> {
+            config.events.serverStopping(ParallelExecutor.SHARED::shutdown);
             config.router.apiBuilder(securityRoutes.getSecurityRoutes());
             config.router.apiBuilder(securityRoutes.getSecuredRoutes());
             config.router.apiBuilder(accountRoutes.getAccountRoutes());
