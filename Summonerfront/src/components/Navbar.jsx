@@ -19,7 +19,8 @@ function Navbar() {
             <a href="/" className="logo">
                 <img src={logo} alt="Summoner Stats" />
             </a>
-            
+
+
             <nav className="nav-links">
             <NavLink to="/">Overview</NavLink>
             <NavLink to="/champions">Champions</NavLink>
