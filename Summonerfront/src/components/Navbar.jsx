@@ -2,6 +2,7 @@ import "../styles/Navbar.css";
 import logo from "../assets/logo.svg";
 import { useState, useEffect } from "react";
 import { getChampionIcon } from "../services/riotApi";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
 
@@ -18,11 +19,12 @@ function Navbar() {
             <a href="/" className="logo">
                 <img src={logo} alt="Summoner Stats" />
             </a>
+            
             <nav className="nav-links">
-            <a href="/" className="active">Overview</a>
-            <a href="/champions">Champions</a>
-            <a href="/leaderboards">Leaderboards</a>
-            <a href="/community">Community</a>
+            <NavLink to="/">Overview</NavLink>
+            <NavLink to="/champions">Champions</NavLink>
+            <NavLink to="/leaderboards">Leaderboards</NavLink>
+            <NavLink to="/community">Community</NavLink>
             </nav>
 
             <button className="profile-button">
