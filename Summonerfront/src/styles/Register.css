@@ -104,3 +104,20 @@
     outline: 2px solid #eef0f5;
     outline-offset: 3px;
 }
+
+.register-login {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.register-login a {
+    color: #d9b575;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.register-login a:hover {
+    color: #e8c88d;
+    text-decoration: underline;
+}
