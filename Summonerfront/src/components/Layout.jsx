@@ -1,10 +1,44 @@
-import { Outlet, useLocation } from "react-router";
+import { Outlet, useLocation, NavLink } from "react-router";
 import Navbar from "./Navbar";
 import BurgerMenu from "./BurgerMenu";
 
-// Tilføj hver sides links, filtre eller andet JSX-indhold under content.
 const pageMenus = {
-    "/": { title: "Overview", content: null },
+    "/": { title: "Overview", content: 
+      (
+        <nav className="burger-menu__items">
+            <NavLink
+                to="/"
+                end
+                className={({ isActive }) =>
+                    isActive
+                        ? "burger-menu__item burger-menu__item--active"
+                        : "burger-menu__item"
+                }
+            >
+                <span
+                    className="burger-menu__icon burger-menu__icon--house"
+                    aria-hidden="true"
+                />
+                <span className="burger-menu__label">Home</span>
+            </NavLink>
+            <NavLink
+                to="/search-account"
+                end
+                className={({ isActive }) =>
+                    isActive
+                        ? "burger-menu__item burger-menu__item--active"
+                        : "burger-menu__item"
+                }
+            >
+                <span
+                    className="burger-menu__icon burger-menu__icon--search"
+                    aria-hidden="true"
+                />
+                <span className="burger-menu__label">Account Search</span>
+            </NavLink>
+        </nav>
+      )
+     },
     "/champions": { title: "Champions", content: null },
     "/leaderboards": { title: "Leaderboards", content: null },
     "/community": { title: "Community", content: null },
@@ -13,13 +47,20 @@ const pageMenus = {
     "/login": { title: "Login", content: null },
 };
 
+// Undersider kan bruge menuen fra deres overordnede sektion.
+const menuSections = {
+    "/search-account": "/",
+};
+
 function Layout({ isLoggedIn = false, onSignOut }) {
     const { pathname } = useLocation();
-    const currentMenu = pageMenus[pathname] || { title: "Workspace", content: null };
+    const menuPath = menuSections[pathname] || pathname;
+    const currentMenu = pageMenus[menuPath] || { title: "Workspace", content: null };
 
     return (
         <>
             <Navbar
+                activeSection={menuPath}
                 isLoggedIn={isLoggedIn}
                 onSignOut={onSignOut}
             />

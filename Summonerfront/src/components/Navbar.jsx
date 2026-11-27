@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { getChampionIcon } from "../services/riotApi";
 import { NavLink } from "react-router-dom";
 
-function Navbar({ isLoggedIn = false, onSignOut }) {
+function Navbar({ isLoggedIn = false, onSignOut, activeSection }) {
     const [profileIcon, setProfileIcon] = useState("");
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const profileRef = useRef(null);
@@ -66,7 +66,15 @@ function Navbar({ isLoggedIn = false, onSignOut }) {
             </a>
 
             <nav className="nav-links">
-                <NavLink to="/">Overview</NavLink>
+                <NavLink
+                    to="/"
+                    end
+                    className={({ isActive }) =>
+                        isActive || activeSection === "/" ? "active" : ""
+                    }
+                >
+                    Overview
+                </NavLink>
                 <NavLink to="/champions">Champions</NavLink>
                 <NavLink to="/leaderboards">Leaderboards</NavLink>
                 <NavLink to="/community">Community</NavLink>

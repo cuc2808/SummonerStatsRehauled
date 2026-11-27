@@ -56,7 +56,6 @@
 }
 
 .burger-menu__items { display: flex; flex-direction: column; gap: 4px; }
-.burger-menu__items[hidden] { display: none; }
 
 .burger-menu__item {
   position: relative;
@@ -68,6 +67,10 @@
   padding: 8px 10px;
   border-radius: 8px;
   background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
   text-align: left;
   white-space: nowrap;
   box-sizing: border-box;
@@ -105,15 +108,29 @@
 }
 
 .burger-menu__icon--menu { mask-image: url("../assets/icons/menu.svg"); }
+.burger-menu__icon--house { mask-image: url("../assets/icons/house.svg"); }
 .burger-menu__icon--search { mask-image: url("../assets/icons/search.svg"); }
 .burger-menu__icon--star { mask-image: url("../assets/icons/star.svg"); }
 .burger-menu__icon--grid { mask-image: url("../assets/icons/grid.svg"); }
 .burger-menu__icon--trophy { mask-image: url("../assets/icons/trophy.svg"); }
 .burger-menu__label { font-size: 15px; letter-spacing: .1px; }
-.burger-menu button:focus-visible { outline: 2px solid #d9b575; outline-offset: 2px; }
+.burger-menu button:focus-visible,
+.burger-menu__item:focus-visible { outline: 2px solid #d9b575; outline-offset: 2px; }
 .burger-menu--collapsed { flex-basis: 64px; width: 64px; }
-.burger-menu--collapsed .burger-menu__title,
-.burger-menu--collapsed .burger-menu__label { display: none; }
+.burger-menu--collapsed .burger-menu__title { display: none; }
+
+/* Behold linkets navn til skærmlæsere, når kun ikonet vises. */
+.burger-menu--collapsed .burger-menu__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 .burger-menu--collapsed .burger-menu__heading { justify-content: center; padding: 0; }
 .burger-menu--collapsed .burger-menu__item { justify-content: center; padding: 8px 0; }
 

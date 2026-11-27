@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import SearchAccount from "./pages/SearchAccount";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
       <Route path="/settings" element={<Settings />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/search-account" element={<SearchAccount />} />
       </Route>
     </Routes>
 

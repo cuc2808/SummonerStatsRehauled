@@ -32,7 +32,7 @@ function BurgerMenu({ title = "Workspace", children }) {
                 </button>
             </div>
 
-            <div id="workspace-menu" className="burger-menu__items" hidden={!isOpen}>
+            <div id="workspace-menu" className="burger-menu__items">
                 {children}
             </div>
         </aside>
