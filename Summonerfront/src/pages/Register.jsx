@@ -1,25 +1,57 @@
+import "../styles/Register.css";
+
 function Register() {
     return (
-        <main>
-            <h1>Register</h1>
+        <section className="register-page">
+            <div className="register-card">
 
-            <p>Please fill out the form below to create an account.</p>
-            <form>
-                <div>
-                    <label htmlFor="username">Username:</label>
-                    <input type="text" id="username" name="username" required />
-                </div>
-                <div>
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" required />
-                </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" name="password" required />
-                </div>
-                <button type="submit">Register</button>
-            </form>
-        </main>
+                <h1>Register</h1>
+
+                <p>
+                    Please fill out the form below to create an account.
+                </p>
+
+                <form className="register-form">
+                    <div className="form-group">
+                        <label htmlFor="username">Username</label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your username"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="register-button">
+                        Register
+                    </button>
+                </form>
+
+            </div>
+        </section>
     );
 }
 
