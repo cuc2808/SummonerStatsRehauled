@@ -1,3 +1,11 @@
 ### Update champions in DB
 POST http://localhost:7070/champion/update
 Authorization: Bearer {{jwt_token}}
+
+### Find specific Champion from the API
+GET http://localhost:7070/champion/{{championId}}
+Authorization: Bearer {{jwt_token}}
+
+### Get champions from DB
+GET http://localhost:7070/champion/get
+Authorization: Bearer {{jwt_token}}

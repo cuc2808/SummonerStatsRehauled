@@ -37,4 +37,26 @@ public class ChampionController {
         ctx.status(200);
         ctx.json(champions);
     }
+
+    public void getChampionsFromDB (Context ctx) {
+        Set<Champion> champions = championDAO.get();
+        logger.info("All Champions successfully found!");
+        ctx.status(200);
+        ctx.json(champions);
+    }
+
+    public void getSpecificChampionFromAPI (Context ctx) {
+        String championId = ctx.pathParam("championId");
+
+        ChampionDTO championDTO = riotApiClient.getChampionWithId(championId);
+
+        if (championDTO == null) {
+            ctx.status(404);
+            ctx.json("Champion not found!");
+            return; // Stopper koden før.
+        }
+
+        ctx.status(200);
+        ctx.json(championMapper.toEntity(championDTO));
+    }
 }

@@ -20,6 +20,8 @@ public class ChampionRoutes {
             path("/champion", () -> {
                 get("/test", ctx->ctx.json(jsonMapper.createObjectNode().put("msg",  "Hello from Admin")), SecurityRoutes.Role.ADMIN);
                 post("/update", championController::updateChampions, SecurityRoutes.Role.ADMIN);
+                get("/{championId}", championController::getSpecificChampionFromAPI, SecurityRoutes.Role.ADMIN);
+                get("/get", championController::getChampionsFromDB, SecurityRoutes.Role.ADMIN);
             });
         };
     }
