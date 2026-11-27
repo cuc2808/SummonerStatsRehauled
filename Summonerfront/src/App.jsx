@@ -10,6 +10,7 @@ import Community from "./pages/Community";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       </Route>
     </Routes>
 
