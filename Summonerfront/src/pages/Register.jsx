@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 function Register() {
     return (
         <main>
@@ -19,6 +21,7 @@ function Register() {
                 </div>
                 <button type="submit">Register</button>
             </form>
+            <NavLink to="/login">Already user? Sign in.</NavLink>
         </main>
     );
 }
